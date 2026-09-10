@@ -1,6 +1,6 @@
 "use client"
 
-import { Play, Square, RefreshCw, RotateCcw } from "lucide-react"
+import { Play, Square, Rewind, RotateCcw } from "lucide-react"
 import type { Direction } from "@/hooks/use-stopwatch"
 
 export function StopwatchControls({
@@ -18,18 +18,43 @@ export function StopwatchControls({
   onReverse: () => void
   onReset: () => void
 }) {
+  const forwardActive = running && direction === 1
+  const backwardActive = running && direction === -1
+
   return (
     <div className="flex w-full max-w-[22rem] flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
+          onClick={onReverse}
+          aria-pressed={backwardActive}
+          className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border font-medium transition-colors"
+          style={{
+            borderColor: "var(--color-accent-reverse)",
+            backgroundColor: backwardActive ? "var(--color-accent-reverse)" : "transparent",
+            color: backwardActive ? "var(--color-primary-foreground)" : "var(--color-accent-reverse)",
+          }}
+        >
+          <Rewind className="h-5 w-5 fill-current" />
+          Reverse
+        </button>
+        <button
+          type="button"
           onClick={onStart}
-          disabled={running}
-          className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl bg-accent-run font-medium text-primary-foreground transition-opacity disabled:opacity-30"
+          aria-pressed={forwardActive}
+          className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border font-medium transition-colors"
+          style={{
+            borderColor: "var(--color-accent-run)",
+            backgroundColor: forwardActive ? "var(--color-accent-run)" : "transparent",
+            color: forwardActive ? "var(--color-primary-foreground)" : "var(--color-accent-run)",
+          }}
         >
           <Play className="h-5 w-5 fill-current" />
           Start
         </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
           onClick={onStop}
@@ -38,21 +63,6 @@ export function StopwatchControls({
         >
           <Square className="h-5 w-5 fill-current" />
           Stop
-        </button>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={onReverse}
-          className="flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border font-medium transition-colors"
-          style={{
-            borderColor: direction === 1 ? "var(--color-accent-reverse)" : "var(--color-accent-run)",
-            color: direction === 1 ? "var(--color-accent-reverse)" : "var(--color-accent-run)",
-          }}
-        >
-          <RefreshCw className="h-5 w-5" />
-          Reverse
         </button>
         <button
           type="button"

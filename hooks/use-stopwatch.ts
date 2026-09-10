@@ -26,13 +26,24 @@ export function useStopwatch() {
     }
   }, [])
 
-  const start = useCallback(() => {
-    if (runningRef.current) return
-    runningRef.current = true
-    setRunning(true)
-    lastRef.current = performance.now()
-    rafRef.current = requestAnimationFrame(tick)
-  }, [tick])
+  const run = useCallback(
+    (dir: Direction) => {
+      directionRef.current = dir
+      setDirection(dir)
+      if (runningRef.current) {
+        // already running: just change direction, keep the clock going
+        return
+      }
+      runningRef.current = true
+      setRunning(true)
+      lastRef.current = performance.now()
+      rafRef.current = requestAnimationFrame(tick)
+    },
+    [tick],
+  )
+
+  const start = useCallback(() => run(1), [run])
+  const reverse = useCallback(() => run(-1), [run])
 
   const stop = useCallback(() => {
     if (!runningRef.current) return
@@ -40,16 +51,6 @@ export function useStopwatch() {
     setRunning(false)
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
     rafRef.current = null
-  }, [])
-
-  const toggle = useCallback(() => {
-    if (runningRef.current) stop()
-    else start()
-  }, [start, stop])
-
-  const reverse = useCallback(() => {
-    directionRef.current = (directionRef.current * -1) as Direction
-    setDirection(directionRef.current)
   }, [])
 
   const reset = useCallback(() => {
@@ -69,5 +70,5 @@ export function useStopwatch() {
     }
   }, [])
 
-  return { elapsed, running, direction, start, stop, toggle, reverse, reset }
+  return { elapsed, running, direction, start, stop, reverse, reset }
 }
