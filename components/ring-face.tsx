@@ -17,6 +17,8 @@ export function RingFace({
   const totalSeconds = elapsed / 1000
   const fraction = norm(totalSeconds, 60) / 60
   const t = splitTime(elapsed)
+  const negative = elapsed < 0
+  const rim = negative ? "var(--color-accent-reverse)" : "var(--color-border)"
   const active = direction === 1 ? "var(--color-accent-run)" : "var(--color-accent-reverse)"
 
   const R = 88
@@ -25,7 +27,8 @@ export function RingFace({
   return (
     <div className="relative aspect-square w-full max-w-[22rem]">
       <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90" role="img" aria-label="Ring stopwatch face">
-        <circle cx="100" cy="100" r="98" fill="var(--color-panel)" stroke="var(--color-border)" strokeWidth="1" />
+        <circle cx="100" cy="100" r="98" fill="var(--color-panel)" stroke={rim} strokeWidth="1" />
+        {negative && <circle cx="100" cy="100" r="97" fill="var(--color-accent-reverse)" opacity="0.06" />}
         <circle cx="100" cy="100" r={R} fill="none" stroke="var(--color-border)" strokeWidth="6" />
         <circle
           cx="100"
@@ -42,7 +45,7 @@ export function RingFace({
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="font-mono text-4xl font-medium tabular-nums text-foreground sm:text-5xl">
-          {t.sign}
+          <span className="text-accent-reverse">{t.sign}</span>
           {t.showHours ? `${t.hours}:` : ""}
           {t.minutes}:{t.seconds}
         </span>

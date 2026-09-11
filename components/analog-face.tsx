@@ -23,14 +23,30 @@ export function AnalogFace({
 
   const active = direction === 1 ? "var(--color-accent-run)" : "var(--color-accent-reverse)"
   const t = splitTime(elapsed)
+  const negative = elapsed < 0
+  const rim = negative ? "var(--color-accent-reverse)" : "var(--color-border)"
 
   const ticks = Array.from({ length: 60 }, (_, i) => i)
 
   return (
     <div className="relative aspect-square w-full max-w-[22rem]">
       <svg viewBox="0 0 200 200" className="h-full w-full" role="img" aria-label="Analog stopwatch face">
-        <circle cx="100" cy="100" r="98" fill="var(--color-panel)" stroke="var(--color-border)" strokeWidth="1" />
+        <circle cx="100" cy="100" r="98" fill="var(--color-panel)" stroke={rim} strokeWidth="1" />
+        {negative && <circle cx="100" cy="100" r="97" fill="var(--color-accent-reverse)" opacity="0.06" />}
         <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-border)" strokeWidth="0.75" />
+
+        {/* sweep direction glyph */}
+        <text
+          x="100"
+          y="76"
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize="12"
+          fill={active}
+          fontFamily="var(--font-mono)"
+        >
+          {direction === 1 ? "\u21BB" : "\u21BA"}
+        </text>
 
         {ticks.map((i) => {
           const angle = (i / 60) * 360
@@ -114,7 +130,7 @@ export function AnalogFace({
 
       <div className="pointer-events-none absolute inset-x-0 bottom-[14%] flex justify-center">
         <span className="font-mono text-xs tracking-widest text-muted-foreground tabular-nums">
-          {t.sign}
+          <span className="text-accent-reverse">{t.sign}</span>
           {t.showHours ? `${t.hours}:` : ""}
           {t.minutes}:{t.seconds}
           <span className="text-etch">.{t.centis}</span>

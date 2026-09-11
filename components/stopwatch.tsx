@@ -6,6 +6,7 @@ import { AnalogFace } from "@/components/analog-face"
 import { DigitalFace } from "@/components/digital-face"
 import { RingFace } from "@/components/ring-face"
 import { StopwatchControls } from "@/components/stopwatch-controls"
+import { DirectionBadge } from "@/components/direction-badge"
 
 type FaceKey = "analog" | "digital" | "ring"
 
@@ -44,6 +45,8 @@ export function Stopwatch() {
           )
         })}
       </div>
+
+      <DirectionBadge direction={direction} negative={elapsed < 0} />
 
       <div className="flex w-full justify-center">
         {face === "analog" && <AnalogFace elapsed={elapsed} direction={direction} running={running} />}
