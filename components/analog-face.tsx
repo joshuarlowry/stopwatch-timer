@@ -35,18 +35,11 @@ export function AnalogFace({
         {negative && <circle cx="100" cy="100" r="97" fill="var(--color-accent-reverse)" opacity="0.06" />}
         <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-border)" strokeWidth="0.75" />
 
-        {/* sweep direction glyph */}
-        <text
-          x="100"
-          y="76"
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize="12"
-          fill={active}
-          fontFamily="var(--font-mono)"
-        >
-          {direction === 1 ? "\u21BB" : "\u21BA"}
-        </text>
+        {/* sweep direction arc-arrow */}
+        <g transform={direction === 1 ? "translate(100 74)" : "translate(100 74) scale(-1 1)"} fill="none">
+          <path d="M -5 -3 A 6 6 0 1 1 -6 2" stroke={active} strokeWidth="1.4" strokeLinecap="round" />
+          <path d="M -6 -1 L -6 3 L -2.4 2.4 Z" fill={active} stroke="none" />
+        </g>
 
         {ticks.map((i) => {
           const angle = (i / 60) * 360
@@ -128,8 +121,8 @@ export function AnalogFace({
         <circle cx="100" cy="100" r="2" fill="var(--color-panel)" />
       </svg>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-[14%] flex justify-center">
-        <span className="font-mono text-xs tracking-widest text-muted-foreground tabular-nums">
+      <div className="pointer-events-none absolute inset-x-0 top-[30%] flex justify-center">
+        <span className="rounded-md bg-panel/80 px-2 py-0.5 font-mono text-xs tracking-widest text-muted-foreground tabular-nums backdrop-blur-sm">
           <span className="text-accent-reverse">{t.sign}</span>
           {t.showHours ? `${t.hours}:` : ""}
           {t.minutes}:{t.seconds}
